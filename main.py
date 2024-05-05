@@ -1,15 +1,20 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request
 from crear_db import CargarDatos
 
 productos = CargarDatos()
 
-#App
+# App
 app = Flask(__name__)
-#Ruta
+
+# Ruta
 @app.route('/')
 def index():
-    return render_template('index.html', productos=productos)
-
+    categoria = request.args.get('categoria')
+    if categoria:
+        productos_filtrados = [producto for producto in productos if producto.get('categoria') == categoria]
+        return render_template('index.html', productos=productos_filtrados, categoria=categoria)
+    else:
+        return render_template('index.html', productos=productos, categoria=None)
 
 @app.route('/producto/<int:pid>')
 def producto(pid):
@@ -18,8 +23,6 @@ def producto(pid):
             return render_template('producto.html', producto=producto)
     return redirect('/')
 
-
-
-#Programa princiupal
+# Programa principal
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

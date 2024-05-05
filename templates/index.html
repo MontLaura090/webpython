@@ -3,8 +3,19 @@
 {% block titulo %}TECHNOLOGY{% endblock %}
 
 {% block contenido %}
+<form id="filtro-form" method="get">
+    <select name="categoria">
+        <option value="">Todas las categorías</option>
+        <option value="Celular">Celulares</option>
+        <option value="Tablet">Tablets</option>
+        <option value="Portátil">Portátiles</option>
+    </select>
+    <button type="submit">Filtrar</button>
+</form>
+
 <div class="d-flex row justify-content-center align-items-center">
     {% for producto in productos %}
+    {% if not categoria or producto.categoria == categoria %}
     <div class="card col-3 m-2">
         <figure>
             <img class="img-fluid" src="{{url_for('static', filename='fotos/') }}{{producto.id}}.jpg">
@@ -15,6 +26,7 @@
             <p style="text-align:right">Precio: {{ "{:,}".format(producto.precio) }}</p>
         </div>
     </div>
+    {% endif %}
     {% endfor %}
 </div>
 {% endblock %}
